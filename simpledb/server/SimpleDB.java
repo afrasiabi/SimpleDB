@@ -9,6 +9,8 @@ import simpledb.planner.*;
 import simpledb.opt.HeuristicQueryPlanner;
 import simpledb.index.planner.IndexUpdatePlanner;
 
+import simpledb.myplanner.*;
+
 /**
  * The class that provides system-wide static global values.
  * These values must be initialized by the method
@@ -100,8 +102,10 @@ public class SimpleDB {
     * To change how the planner works, modify this method.
     * @return the system's planner for SQL commands
     */public static Planner planner() {
-      QueryPlanner  qplanner = new BasicQueryPlanner();
-      UpdatePlanner uplanner = new BasicUpdatePlanner();
+      // QueryPlanner  qplanner = new BasicQueryPlanner();
+      // UpdatePlanner uplanner = new BasicUpdatePlanner();
+      QueryPlanner  qplanner = new MyQueryPlanner();
+      UpdatePlanner uplanner = new MyUpdatePlanner();
       return new Planner(qplanner, uplanner);
    }
 }

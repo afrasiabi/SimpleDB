@@ -2,14 +2,19 @@ package simpledb.myplanner;
 
 import java.util.*;
 import simpledb.query.*;
-import simpledb.record.Schema;
 import simpledb.index.query.*;
-import simpledb.tx.Transaction;
-import simpledb.server.SimpleDB;
+
 import simpledb.parse.QueryData;
-import simpledb.metadata.IndexInfo;
 import simpledb.planner.QueryPlanner;
+
+import simpledb.tx.Transaction;
+import simpledb.record.Schema;
+import simpledb.metadata.IndexInfo;
 import simpledb.multibuffer.MultiBufferProductPlan;
+import simpledb.server.SimpleDB;
+import java.util.Map;
+
+import simpledb.*;
 
 public class MyQueryPlanner implements QueryPlanner {
 
@@ -48,7 +53,7 @@ public class MyQueryPlanner implements QueryPlanner {
 			bestTablePlan = null;
 			Plan p = null;
 
-			Iterator<MyPlanner> it = tps.iterator();
+			it = tps.iterator();
 
 			while(it.hasNext()) {
 
@@ -78,7 +83,7 @@ public class MyQueryPlanner implements QueryPlanner {
 				bestTablePlan = null;
 				p = null;
 
-				Iterator<MyPlanner> it = tps.iterator();
+				it = tps.iterator();
 
 				while(it.hasNext()) {
 
@@ -147,7 +152,7 @@ class MyPlanner {
 				Plan p = new IndexSelectPlan(this._myPlan, indexInfo, constant_, this._tx);
 
 							// select prediction
-				Predicate selectPredicate = _myPredicate.selectPredicate(this._mySchema);
+				Predicate selectPredicate = _myPredicate.selectPred(this._mySchema);
 				if (selectPredicate != null)
 					return new SelectPlan(p, selectPredicate);
 				else
@@ -157,7 +162,7 @@ class MyPlanner {
 		}
 
 				// select prediction
-		Predicate selectPredicate = _myPredicate.selectPredicate(this._mySchema);
+		Predicate selectPredicate = _myPredicate.selectPred(this._mySchema);
 
 		if (selectPredicate != null)
 			return new SelectPlan(this._myPlan, selectPredicate);
@@ -170,7 +175,7 @@ class MyPlanner {
 
 		Schema currsch = current.schema();
 
-		Predicate joinPredicate = _myPredicate.joinPredicate(this._mySchema, currsch);
+		Predicate joinPredicate = _myPredicate.joinPred(this._mySchema, currsch);
 		if (joinPredicate == null)
 			return null;
 
@@ -184,12 +189,12 @@ class MyPlanner {
 				Plan p = new IndexJoinPlan(current, this._myPlan, indexInfo, outerField, this._tx);
 
 							// select prediction
-				Predicate selectPredicate = _myPredicate.selectPredicate(this._mySchema);
+				Predicate selectPredicate = _myPredicate.selectPred(this._mySchema);
 				if (selectPredicate != null)
 					p = new SelectPlan(p, selectPredicate);
 
 							// join predicate
-				Predicate joinPredicate = _myPredicate.joinPredicate(currsch, this._mySchema);
+				joinPredicate = _myPredicate.joinPred(currsch, this._mySchema);
 
 				if (joinPredicate != null)
 
@@ -207,7 +212,7 @@ class MyPlanner {
 		Plan p = createProduct(current);
 
 					// join predicate
-		Predicate joinPredicate = _myPredicate.joinPredicate(currsch, this._mySchema);
+		joinPredicate = _myPredicate.joinPred(currsch, this._mySchema);
 		if (joinPredicate != null)
 			return new SelectPlan(p, joinPredicate);
 
@@ -219,7 +224,7 @@ class MyPlanner {
 	public Plan createProduct(Plan current) {
 
 				// select prediction
-		Predicate selectPredicate = _myPredicate.selectPredicate(this._mySchema);
+		Predicate selectPredicate = _myPredicate.selectPred(this._mySchema);
 
 		if (selectPredicate != null) {
 

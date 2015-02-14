@@ -9,7 +9,8 @@ import simpledb.planner.*;
 import simpledb.opt.HeuristicQueryPlanner;
 import simpledb.index.planner.IndexUpdatePlanner;
 
-import simpledb.myplanner.*;
+import simpledb.myplanner.MyQueryPlanner;
+import simpledb.myplanner.MyUpdatePlanner;
 
 /**
  * The class that provides system-wide static global values.
